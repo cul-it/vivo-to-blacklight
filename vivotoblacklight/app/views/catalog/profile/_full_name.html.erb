@@ -1,0 +1,19 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<%
+statement_data = statement["allData"]
+if (statement_data.has_key?("fullName") and statement_data["fullName"].present? )
+        if (statement_data.has_key?("prefix?") and statement_data["prefix"].present?)
+       		%><%= statement_data["prefix"]%><%
+        
+		end
+		%>
+        <%= (statement_data["firstName"].present?)? statement_data["firstName"] : "" %>
+        <%= (statement_data["middleName"].present?)? statement_data["middleName"] : "" %>
+        <%= (statement_data["lastName"].present?)? statement_data["lastName"] : "" %>
+        <%= (statement_data["suffix"].present?)? statement_data["suffix"] : "" %>
+<%        
+end        
+%>  

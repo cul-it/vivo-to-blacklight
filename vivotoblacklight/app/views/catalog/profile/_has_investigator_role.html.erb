@@ -1,0 +1,40 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "investigator on," "principal investigator on" and  
+statement_data = statement['allData']
+display_html = ""
+linked_individual = ""
+award_or_admin_by = ""
+date_time = ""
+space_char = "&nbsp;".html_safe
+if(statement_data.has_key?("hideThis") && statement_data["hideThis"] != nil)
+  #show nothing - find better way to deal with this at level BEFORE property_level statement
+else
+  if(statement_data.has_key?("activity"))
+    linked_individual = '<a href="' + get_profile_url(statement_data["activity"]) + '" title="activity name">' + (statement_data["activityLabel"] || statement_data["activityName"] || "") + '</a>'
+  else
+    # This shouldn't happen, but we must provide for it  
+    linked_individual = '<a href="' + get_profile_url(statement_data["role"]) + '" title="missing activity">missing activity</a>'
+  end
+    
+  if( statement_data.has_key?("awardedByLabel"))
+      award_or_admin_by = space_char + 'awarded by' + space_char + '<a href="' + get_profile_url(statement_data["awardedBy"]) + '" title="awarded by">' + (statement_data["awardedByLabel"] || "") + '</a>'
+  elsif( statement_data.has_key?("adminedByLabel"))
+    award_or_admin_by = space_char + 'administered by' + space_char + '<a href="' + get_profile_url(statement_data["adminedBy"]) + '" title="administered by">' + (statement_data["adminedByLabel"] || "") + '</a>'
+  end
+   
+        
+
+  if( (statement_data.has_key?("dateTimeStartRole") && statement_data["dateTimeStartRole"] != nil) || (statement_data.has_key?("dateTimeEndRole") && statement_data["dateTimeEndRole"] != nil))
+      date_time = yearIntervalSpan( (statement_data["dateTimeStartRole"] || ""), (statement_data["dateTimeEndRole"] || ""))
+  else
+      date_time = yearIntervalSpan( (statement_data["dateTimeStartGrant"] || ""), (statement_data["dateTimeEndGrant"] || ""))
+  end
+  display_html = linked_individual + award_or_admin_by + (date_time || "")
+end
+
+%>
+<%= display_html.html_safe%>

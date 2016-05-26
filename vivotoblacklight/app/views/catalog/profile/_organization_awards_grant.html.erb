@@ -1,0 +1,11 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% statement_data = statement['allData'] 
+if( statement_data.has_key?("grantOrContract"))
+  %>
+  <a href="<%= get_profile_url(statement_data["grantOrContract"]) %>" title="grant name"><%= (statement_data["label"] || "")%></a>
+  <%
+end
+ %>

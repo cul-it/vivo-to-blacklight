@@ -1,0 +1,41 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "awards and honors". See the PropertyConfig.3 file for details.  
+ statement_data = statement['allData']  
+ linked_individual = ""
+ date_time_val = ""
+ assigned_by_org = ""
+  
+ 
+    
+if( statement_data.has_key?("award"))
+    linked_individual = "<a href='" + get_profile_url(statement_data["award"]) + "' title='award name'>" + (statement_data["awardLabel"] || "") + "</a>"
+else
+    linked_individual = "<a href='" + get_profile_url(statement_data["awardReceipt"]) + "' title='award receipt name'>" + (statement_data["receiptLabel"] || "") + "</a>"
+end
+
+
+
+if( statement_data.has_key?("dateTime"))
+  date_time_val = yearSpan(statement_data["dateTime"] || "") 
+else
+  date_time_val = yearIntervalSpan((statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || ""))
+end
+
+
+
+if( statement_data.has_key?("assignedBy") && statement_data["assignedBy"] != nil && statement_data.has_key?("assignedByLabel") && statement_data["assignedByLabel"] != nil)
+     assigned_by_org = "conferred by <a href='" + get_profile_url(statement_data["assignedBy"]) + "' title='conferred by'>" + statement_data["assignedByLabel"] + "</a>"
+end
+
+
+
+display_array = [linked_individual, assigned_by_org, date_time_val]
+#get rid of any nil empty strings
+display_html = join_strings_reject_empty(display_array).html_safe
+
+ %>
+<%= display_html %>

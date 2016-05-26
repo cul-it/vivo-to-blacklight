@@ -1,0 +1,12 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% statement_data = statement['allData'] 
+if( statement_data.has_key?("number") && statement_data["number"] != nil)
+  %>
+        <%= statement_data["number"] %>
+  <%      
+end    
+          
+%>

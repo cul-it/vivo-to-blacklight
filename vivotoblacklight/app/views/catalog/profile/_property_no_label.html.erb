@@ -1,0 +1,16 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<%
+#Property without a label
+statements = property_info_object["statements"]
+statementDisplay = getStatementsDisplay(statements, property_info_object)
+if(statementDisplay.size() > 0)
+  statementDisplay.each do |statement_display|
+%>
+    <%= content_tag :span, statement_display, :class => ["metadata-field","properties"] %>
+<%
+  end #do
+end #if
+%>

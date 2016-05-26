@@ -1,0 +1,34 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "presentations".
+statement_data = statement['allData'] 
+
+linked_individual = ""
+date_time = ""
+
+conference = ""
+if( statement_data.has_key?("presentation"))
+    linked_individual = '<a href="' + get_profile_url(statement_data["presentation"]) + '" title="presentation name">' + (statement_data["presentationLabel"] || statement_data["presentationName"] || "") + '</a>'
+else
+    # This shouldn't happen, but we must provide for it  
+    linked_individual = '<a href="' + get_profile_url(statement_data["role"]) + '" title="missing presentation">missing presentation</a>'
+end
+
+date_time = yearSpan(statement_data["dateTime"] || "") 
+
+if( statement_data.has_key?("conference") && statement_data["conference"] != nil && statement_data.has_key?("conferenceLabel") && statement_data["conferenceLabel"] != nil)
+    conference = '<a href="' + get_profile_url(statement_data["conference"]) + '" title="conference">' + statement_data["conferenceLabel"] +  '</a>'
+elsif( statement_data.has_key?("series") && statement_data["series"] != nil && statement_data.has_key?("seriesLabel") && statement_data["seriesLabel"] != nil)
+    conference = '<a href="' + get_profile_url(statement_data["series"]) + '" title="series">' + statement_data["seriesLabel"] + '</a>'
+end
+
+display_array = [linked_individual, (statement_data["roleLabel"] || ""), (conference || "")]
+#get rid of any nil empty strings
+display_html = join_strings_reject_empty(display_array).html_safe
+display_html += "&nbsp;".html_safe + (date_time || "").html_safe
+%>
+
+<%= display_html %>

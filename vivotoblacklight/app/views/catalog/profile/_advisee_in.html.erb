@@ -1,0 +1,34 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% #Custom object property statement_data view for faux property "advisee of". 
+%>
+
+<% statement_data = statement['allData'] 
+display_html = ""
+if( statement_data.has_key?("advisor"))
+    if( statement_data.has_key?("degreeLabel") || statement_data.has_key?("dateTimeStart") || statement_data.has_key?("dateTimeEnd") )
+        display_html = "<a href=\"" + get_profile_url(statement_data['advisor']) +"\" title=\"Advisor\">  " + (statement_data["advisorLabel"] || "") + "</a>,"
+    else
+      display_html = "<a href=\"" + get_profile_url(statement_data['advisor']) +"\"  title=\"Advisor\">  " + (statement_data["advisorLabel"] || "") + "</a>"
+    end
+    if( statement_data.has_key?("degreeLabel"))
+      display_html += (statement_data["degreeAbbr"] || statement_data["degreeLabel"] || "") 
+        if( statement_data.has_key?("dateTimeStart") || statement_data.has_key?("dateTimeEnd"))
+          display_html += "&nbsp;candidacy,"
+        else
+          display_html += "&nbsp;candidacy"
+        end
+    end
+elsif( statement_data.has_key?("advisingRelLabel"))
+    display_html = "<a href=\"" + get_profile_url(statement_data["advisingRel"]) + "\" title=\"advising relationship\">" + (statement_data["advisingRelLabel"] || "") + statement_data["localName"]  + "</a>"
+      
+end
+
+
+
+%>
+
+<%= display_html.html_safe %>
+<%=  yearIntervalSpan( (statement_data["dateTimeStart"] ||''),  (statement_data["dateTimeEnd"]||'')  ).html_safe %>

@@ -1,0 +1,30 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "reviewer of".
+statement_data = statement['allData'] 
+linked_individual = ""
+date_time = ""
+subclass_label = ""    
+  
+if( statement_data.has_key?("activity") && statement_data["activity"] != nil)
+	linked_individual = '<a href="' + get_profile_url(statement_data["activity"]) + '" title="activity name">' + (statement_data["activityLabel"] || statement_data["activityName"] || "") + '</a>'
+end
+
+date_time = yearIntervalSpan( (statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || ""))
+
+# If property is collated, then subclass label is redundant information  
+#expect property collated by subclass to be false
+if(!property_collated_by_subclass and statement_data.has_key?("subclassLabel") and statement_data["subclassLabel"] != nil )  
+  subclass_label = "&nbsp;(".html_safe + (statement_data["subclassLabel"] || "") + ")"
+end
+
+
+
+display_html = linked_individual + "&nbsp;".html_safe + subclass_label + "&nbsp;".html_safe + date_time
+
+%>
+
+<%= display_html.html_safe %> 

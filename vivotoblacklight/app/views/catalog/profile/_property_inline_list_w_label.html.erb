@@ -1,0 +1,35 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% #Display property value with delimiter 
+if !local_assigns.has_key?(:div_id)
+  div_id = "div-" + property_info_object["localName"]
+end
+if !local_assigns.has_key?(:property_display_name)
+  property_display_name = property_info_object["name"]
+end
+%>
+<span class="metadata-field properties">
+<span class="metadata-title"><%=property_display_name.titleize%>:</span>
+<%
+statements = property_info_object["statements"]
+  # Rails.logger.debug("property name #{property_display_name.inspect} and #{property_info_object['partial_name'].inspect}")
+statementDisplay = getStatementsDisplay(statements, property_info_object)
+if(statementDisplay.size() > 0)
+  statement_counter = 0
+  last_statement_counter = statementDisplay.size()
+  statementDisplay.each do|statement_display|
+    statement_counter  = statement_counter + 1
+    statement_delimiter = "; "
+    if(statement_counter == last_statement_counter)
+      statement_delimiter = ""
+    end
+%>
+<%= statement_display.html_safe %><%= statement_delimiter %>
+<%
+  end #do
+end #if
+%>
+
+</span>

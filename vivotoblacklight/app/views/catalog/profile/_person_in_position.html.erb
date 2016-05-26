@@ -1,0 +1,33 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<%
+#Custom object property statement_data view for faux property "positions". 
+statement_data = statement['allData'] 
+position_title = ""
+linked_individual = ""
+middle_organization = ""
+
+position_title = "<span itemprop=\"jobTitle\">" + (statement_data["positionTitle"] || statement_data["hrJobTitle"] || "") + "</span>"
+if( statement_data.has_key?("org"))
+  linked_individual = "<span itemprop=\"worksFor\" itemscope itemtype=\"http://schema.org/Organization\">" + 
+       "<a itemprop=\"name\" href=\"" + get_profile_url(statement_data["org"]) + "\" title=\"organization name\">" + statement_data["orgName"] + "</a>" + 
+       "</span>"
+else
+  # This shouldn't happen, but we must provide for it 
+  linked_individual = "<a href=\"" + get_profile_url(statement["position"]) + "\" title=\"missing organization\">missing organization</a>"
+end
+
+if( statement_data.has_key?("middleOrg"))
+    middle_organization = "<span itemprop=\"worksFor\" itemscope itemtype=\"http://schema.org/Organization\">" + 
+        "<a itemprop=\"name\" href=\"" + get_profile_url(statement_data["middleOrg"]) + "\" title=\"middle organization\">" +  (statement_data["middleOrgName"] || "") + "</a>" + 
+        "</span>"
+end
+    
+display_array = [position_title, linked_individual, middle_organization]
+display_html = join_strings_reject_empty(display_array).html_safe
+%>
+
+<%= display_html%> <%= yearIntervalSpan( (statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"])) %>
+

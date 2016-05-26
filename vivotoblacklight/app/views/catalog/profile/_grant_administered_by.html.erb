@@ -1,0 +1,17 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+
+#Used on grant display to show what is responsible for administering the grant
+statement_data = statement['allData'] 
+  linked_individual = ""
+  if( statement_data.has_key?("organization"))
+      linked_individual = "<a href='" + get_profile_url(statement_data["organization"]) + "' title='organization name'>" +  (statement_data["organizationLabel"] || "") + "</a>"
+  else
+    linked_individual = "<a href='" + get_profile_url(statement_data["administratorRole"]) + "' title='administering organization for'>missing organization</a>"
+  end
+
+ %>
+<%= linked_individual.html_safe %>

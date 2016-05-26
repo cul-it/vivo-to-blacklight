@@ -1,0 +1,31 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # http://vivoweb.org/ontology/core#dateTimeValue %>
+<%
+statement_data = statement["allData"]
+if !statement_data["dateTime"].present?
+    	
+    		## This is from the original line but this wouldn't be a document in solr to begin with
+    		#profileUrl(statement.uri("dateTimeValue")
+    		%>
+    		Incomplete date time value (Error)
+        	
+    		<%
+    	
+else
+  #${dt.formatXsdDateTimeLong(statement.dateTime, statement.precision!)}
+  dateTime = statement_data["dateTime"]
+  precision =  (statement_data["precision"] || "")
+  formatted_date = formatXsdDateTimeLong(dateTime, precision)
+       
+       %>
+        	<%=formatted_date%>
+        <%
+end
+    
+%>
+
+
+

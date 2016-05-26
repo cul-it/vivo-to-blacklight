@@ -1,0 +1,11 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% statement_data = statement['allData'] 
+ 
+    if( statement_data.has_key?("emailAddress") && statement_data["emailAddress"] != nil)
+            %><%= statement_data["emailAddress"] %><%
+    end    
+          
+%>

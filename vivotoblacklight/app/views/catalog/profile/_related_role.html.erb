@@ -1,0 +1,48 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+statement_data = statement['allData'] 
+linked_individual = ""
+role_label = ""  
+display_html=""
+if(statement_data.has_key?("indivInRole") && statement_data["indivInRole"] != nil)
+
+  if(statement_data.has_key?("vSubclass") && statement_data["vSubclass"] != nil && statement_data["vSubclass"].include?("vcard"))
+    individual_label = statement_data["indivLabel"]
+#    trimmed_label = individual_label.gsub(/\s+/, "")
+#    comma_index = trimmed_label.rindex(",")
+#    if(trimmed_label.length == comma_index + 1)
+#      individual_label = trimmed_label
+#    end
+#    linked_individual = individual_label
+    linked_individual = individual_label.chomp(",")
+  else
+    linked_individual = '<a href="' + get_profile_url(statement_data["indivInRole"]) + '" title="name">' + (statement_data["indivLabel"]||statement_data["indivName"] || "") + '</a>'
+
+  end
+     
+else  
+  # This shouldn't happen, but we must provide for it 
+  linked_individual =  '<a href="' + get_profile_url(statement["role"]) + '"  title="missing person in role">missing person in role</a>'
+end
+           
+       
+if( statement_data.has_key?("roleTypeLabel") && statement_data["roleTypeLabel"] != nil)
+    role_type_label = (statement_data["roleTypeLabel"]||"")
+else
+  role_type_label = ""
+end
+if( statement_data.has_key?("roleLabel"))
+    role_label = statement_data["roleLabel"].gsub(" Role", "").gsub(" role","")
+elsif( !property_collated_by_subclass )
+    role_label = role_type_label.gsub(" Role", "")
+end
+
+date_time = yearIntervalSpan(statement_data["dateTimeStart"] || "", statement_data["dateTimeEnd"] || "")
+space_char = "&nbsp;".html_safe
+display_html = linked_individual + space_char + (role_label || "") + space_char + date_time
+
+%>
+<%=display_html.html_safe%>

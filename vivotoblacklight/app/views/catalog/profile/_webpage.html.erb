@@ -1,0 +1,35 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<%
+statement_data = statement["allData"]
+linkText = ""
+
+if (statement_data.has_key?("label") and statement_data["label"].present? )
+	linkText = statement_data["label"].strip
+else
+        if (statement_data.has_key?("url?") and statement_data["url"].present?)
+       		linkText = statement_data["url"].strip
+        
+		end
+end
+
+if (statement_data.has_key?("url") and statement_data["url"].present?)
+
+		%>
+		 <a href="<%= statement_data["url"]%>" title="link text"><%= linkText%></a>
+		<%
+else
+	linkURI = ""
+	if(statement_data.has_key?("link") and statement_data["link"].present?)
+		# Original portion in freemarker was {profileUrl(statement.uri("link")), this would generate a URI
+		# Here we just output it
+		linkURI = statement_data["link"]
+	end
+		%>
+		 <a href="<%= linkURI %>" title="link name"><%= statement_data["linkName"]%></a> (no url provided for link)
+      
+<%        
+end        
+%>  

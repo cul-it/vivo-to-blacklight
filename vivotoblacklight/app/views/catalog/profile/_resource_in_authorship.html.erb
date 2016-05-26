@@ -1,0 +1,29 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # Display relationship from resource back to author, i.e. display authors of resource %>
+<%
+statement_data = statement["allData"]
+if statement_data["author"].present?
+    	if statement_data["subclass"].present? && statement_data["subclass"].include?("vcard") 
+    	%>
+        	<%= statement_data["authorName"] %>
+        <%
+    	else
+    		author_link = "n1res?DocId=" + CGI::escape("vitroIndividual:" + statement_data["author"])
+    		%>
+    		
+        	<a href="<%= author_link%>" title="author name"><%= statement_data["authorName"] %></a>
+    		<%
+    	end
+    else
+       # This shouldn't happen, but we must provide for it
+       authorship_link = "n1res?DocId=" + CGI::escape("vitroIndividual:" + statement_data["authorship"] )
+       
+       %>
+        <a href="<%= authorship_link%>" title="missing author">missing author</a>
+        <%
+    end
+    
+%>

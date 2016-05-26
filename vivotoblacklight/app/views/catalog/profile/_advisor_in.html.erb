@@ -1,0 +1,31 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # Custom object property statement_data view for faux property "advisees".  
+%>
+<% statement_data = statement['allData'] 
+  linked_individual = ""
+  
+  if( statement_data.has_key?("advisee"))
+            if( statement_data.has_key?("degreeLabel") || statement_data.has_key?("dateTimeStart") || statement_data.has_key?("dateTimeEnd") )
+                linked_individual = "<a href=\"" +  get_profile_url(statement_data["advisee"]) + "\" title=\"advisee\">" + (statement_data["adviseeLabel"] || "") + "</a>,"
+            else
+              linked_individual = "<a href=\"" +  get_profile_url(statement_data["advisee"]) + "\" title=\"advisee\">" + (statement_data["adviseeLabel"] || "") + "</a>"
+            end
+            if( statement_data.has_key?("degreeLabel"))
+                linked_individual += (statement_data["degreeAbbr"] || statement_data["degreeLabel"] || "")
+              
+                if( statement_data.has_key?("dateTimeStart") || statement_data.has_key?("dateTimeEnd") )
+                   linked_individual += "&nbsp;candidate,"
+                else linked_individual += "&nbsp;candidate"
+                end
+            end
+        elsif( statement_data.has_key?("advisingRelLabel"))
+              linked_individual = "<a href=\"" +  get_profile_url(statement_data["advisingRel"]) + "\" title=\"advising relationship\">" + (statement_data["advisingRelLabel"] || statement_data["localName"] || "") + "</a>"
+        end
+    
+%>
+    <%= linked_individual.html_safe %>    <%= yearIntervalSpan((statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || "") ).html_safe %>
+      
+      

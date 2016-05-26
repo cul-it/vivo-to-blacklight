@@ -1,0 +1,45 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "organization for training".
+#This isn't currently used because this property is hidden from public view
+#Keeping this here just in case that changes in the future for some reason - currently not connected to the property
+#If this property is made public, will need to add 
+#"propStatement-organizationForTraining.ftl" => "catalog/profile/organization_for_training",
+#to vivo_profile.rb
+
+statement_data = statement['allData'] 
+linked_individual = ""
+detailed_info = ""
+    
+if( statement_data.has_key?("person"))
+    linked_individual = '<a href="' + get_profile_url(statement_data["person"]) + '" title="person name">' +  statement_data["personName"] + '</a>'
+else>
+    <% # This shouldn't happen, but we must provide for it  %>
+  linked_individual = '<a href="' + get_profile_url(statement_data["edTraining"]) + '" title="missing person in position">missing person in position</a>'
+end
+
+
+
+
+if( statement_data.has_key?("degree") && statement_data["degree"] != nil)
+    detailed_info = (statement_data["degreeAbbr"] || "") 
+    if( statement_data.has_key?("majorField") && statement_data["majorField"] != nil)
+      detailed_info += "in " + (statement_data["majorField"] || "")
+    end
+elsif( statement_data.has_key?("majorField") && statement_data["majorField"] != nil)
+  detailed_info = (statement_data["majorField"] || "")
+elsif( statement_data.has_key?("info") && statement_data["info"] != nil)
+  detailed_info = (statement_data["info"] || "")
+end
+
+
+
+
+display_array = [linked_individual, detailed_info]
+#get rid of any nil empty strings
+display_html = join_strings_reject_empty(display_array).html_safe  +  yearIntervalSpan( (statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || ""), false)      
+ %>
+<%= display_html%>

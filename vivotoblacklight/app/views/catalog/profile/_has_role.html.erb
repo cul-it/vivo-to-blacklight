@@ -1,0 +1,35 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for the roleRealizedIn, roleContributesTo, researchActivities, hasRole  
+statement_data = statement['allData'] 
+linked_individual = ""
+date_time = ""
+display_html = "" 
+if( statement_data.has_key?("hideThis") && statement_data["hideThis"] != nil)
+  #This appears to be specific to the VIVO profile page - the property displays and this removes the divs that would normally have content
+  #This seems better handled at BEFORE the statement rendering level
+#    display_html = '<span class="hideThis">&nbsp;</span>' +
+#    '<script type="text/javascript" >' +
+#        '$(\'span.hideThis\').parent().parent().addClass("hideThis");' + 
+#        'if ( $(\'h3#RO_0000053-ResearcherRole\').attr(\'class\').length == 0 ) {' + 
+#            '$(\'h3#RO_0000053-ResearcherRole\').addClass('hiddenGrants');' + 
+#        }
+#        $('span.hideThis').parent().remove();
+#    </script>
+else
+
+    if( statement_data.has_key?("activity"))
+        linked_individual = '<a href="' + get_profile_url(statement_data["activity"]) + '" title="activity name">' + (statement_data["activityLabel"] || statement_data["activityName"] || "") + '</a>'
+    else
+     # This shouldn't happen, but we must provide for it 
+      linked_individual = '<a href="' + get_profile_url(statement_data["role"]) + '" title="missing activity">missing activity</a>'
+    end
+    date_time = yearIntervalSpan((statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || ""))
+    display_html = linked_individual + "&nbsp;".html_safe + (statement_data["roleLabel"] || "") + "&nbsp;".html_safe + (date_time || "")
+end
+%>
+
+<%= display_html.html_safe %>

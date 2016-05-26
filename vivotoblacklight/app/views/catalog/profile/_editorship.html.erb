@@ -1,0 +1,90 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "editor of". 
+#relatedBy = base property
+
+statement_data = statement['allData'] 
+citation_details = ""
+resource_title = ""
+
+    if( statement_data.has_key?("subclass"))
+        if( statement_data["subclass"].include?("Article"))
+            if( statement_data.has_key?("journal"))
+                citation_details = "<em>" + (statement_data["journal"] || "")  + "</em>.&nbsp;"
+                if( statement_data.has_key?("volume") && statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+                  citation_details +=  (statement_data["volume"] || "")  + ":" + (statement_data["startPage"] || "")  + "-" + (statement_data["endPage"] || "")  + "."
+                elsif( statement_data.has_key?("volume") && statement_data.has_key?("startPage"))
+                  citation_details +=  (statement_data["volume"] || "")  + ":" + (statement_data["startPage"] || "")  + "."
+                elsif( statement_data.has_key?("volume"))
+                  citation_details +=  (statement_data["volume"] || "")  + "."
+                elsif( statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+                  citation_details +=  (statement_data["startPage"] || "")  + "-" + (statement_data["endPage"] || "")  + "."
+                elsif( statement_data.has_key?("startPage"))
+                  citation_details +=  (statement_data["startPage"] || "")  + "."
+                end
+            end
+        elsif( statement_data["subclass"].include?("Chapter"))
+            if( statement_data.has_key?("journal"))
+                  citation_details += "<em>" + (statement_data["journal"] || "") + "</em>."
+            elsif( statement_data.has_key?("appearsIn"))
+                  citation_details += "<em>" + (statement_data["appearsIn"] || "") + "</em>."
+            elsif( statement_data.has_key?("partOf"))
+                  citation_details += "<em>" + (statement_data["partOf"] || "") + "</em>."
+            end
+            if( statement_data.has_key?("locale") && statement_data.has_key?("publisher"))
+              citation_details +=  (statement_data["locale"] || "") + ":&nbsp;" + (statement_data["publisher"] || "") + "."
+            elsif( statement_data.has_key?("locale"))
+              citation_details +=  (statement_data["locale"] || "") + "."
+            elsif( statement_data.has_key?("publisher"))
+              citation_details += (statement_data["publisher"] || "") + "."
+            end
+            if( statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+              citation_details += (statement_data["startPage"] || "") + "-" + (statement_data["endPage"] || "") + "."
+            elsif( statement_data.has_key?("startPage"))
+              citation_details +=  (statement_data["startPage"] || "") + "."
+            end
+        elsif( statement_data["subclass"].include?("Book"))
+            if( statement_data.has_key?("volume") && ((statement_data["volume"] || "").length > 0 ))
+              citation_details += "v. &nbsp;" + (statement_data["volume"] || "") + ".&nbsp;"
+            end
+            if( statement_data.has_key?("locale") && statement_data.has_key?("publisher"))
+              citation_details += (statement_data["locale"] || "") + ":&nbsp;" + (statement_data["publisher"] || "") + "."
+            elsif( statement_data.has_key?("locale"))
+              citation_details +=  (statement_data["locale"] || "") + "."
+            elsif( statement_data.has_key?("publisher"))
+              citation_details +=  (statement_data["publisher"] || "") + "."
+            end
+        else
+            if( statement_data.has_key?("journal"))
+              citation_details += "<em>" + (statement_data["journal"] || "") + "</em>."
+            elsif( statement_data.has_key?("appearsIn"))
+              citation_details += "<em>" + (statement_data["appearsIn"] || "") + "</em>."
+            elsif( statement_data.has_key?("partOf"))
+              citation_details += "<em>" + (statement_data["partOf"] || "") + "</em>."
+            end
+            if( statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+              citation_details +=  (statement_data["startPage"] || "") + "-" + (statement_data["endPage"] || "") + "."
+            elsif( statement_data.has_key?("startPage"))
+              citation_details +=  (statement_data["startPage"] || "") + "."
+            end
+        end
+    end
+
+
+        if( statement_data.has_key?("infoResource"))
+            if( citation_details != "")
+                resource_title = "<a href=\"" + get_profile_url(statement_data["infoResource"]) + "\"  title=\"resource name\">" + statement_data["infoResourceName"] + "</a>.&nbsp;"
+            else
+                resource_title = "<a href=\"" + get_profile_url(statement_data["infoResource"]) + "\"  title=\"resource name\">" + statement_data["infoResourceName"] + "</a>"
+            end
+        else
+             # This shouldn't happen, but we must provide for it  
+            resource_title = "<a href=\"" + get_profile_url(statement_data["editorship"]) + "\" title=\"missing info resource\">missing resource</a>"
+        end
+   
+ %>
+ 
+ <%= resource_title.html_safe %> <%= citation_details.html_safe%> <%= yearSpan( (statement_data["dateTime"] || "")).html_safe %>

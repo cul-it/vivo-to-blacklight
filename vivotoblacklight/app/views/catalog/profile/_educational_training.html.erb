@@ -1,0 +1,42 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # Custom object property statement_data view for faux property "education and training". 
+# base property = http://purl.obolibrary.org/obo/RO_0000056
+statement_data = statement['allData'] 
+degree = ""
+linked_individual = ""
+
+if( statement_data.has_key?("degreeName"))
+  degree =  (statement_data["degreeAbbr"] || statement_data["degreeName"] || "") 
+  if( statement_data.has_key?("majorField")) 
+    degree += " in " + statement_data["majorField"]
+  end
+elsif( statement_data.has_key?("typeName"))
+    degree = (statement_data["typeName"] || "")
+end
+    
+   
+if( statement_data.has_key?("org"))
+  schemaType = "http://schema.org/Organization" 
+  subclass = statement_data["subclass"] || ""
+    if( subclass.include?("Educational") )
+        schemaType = "http://schema.org/CollegeOrUniversity"
+    end
+    linked_individual = "<span itemscope itemtype=\"" +  schemaType + "\">"
+    linked_individual += "<a itemprop=\"name\" href=\"" + get_profile_url(statement_data["org"]) + "\" title=\"organization name\">" + statement_data["orgName"] + "</a>" + "</span>"
+#Not including any editing functionality as not relevant here
+end
+   
+display_html = degree + (linked_individual != ""? "," + linked_individual : "") 
+if(statement_data.has_key?("deptOrSchool") && statement_data["deptOrSchool"] != "")
+  display_html += " ," + statement_data["deptOrSchool"]
+end
+if(statement_data.has_key?("info") && statement_data["info"] != "")
+  display_html += " ," + statement_data["info"]
+end
+
+%>
+
+<%= display_html.html_safe%> <%= yearIntervalSpan( (statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || ""),  false) %> 

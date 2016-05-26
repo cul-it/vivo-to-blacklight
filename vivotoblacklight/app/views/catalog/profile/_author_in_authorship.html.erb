@@ -1,0 +1,122 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # Simplified authorship information which can be extended to more closely  mirror VIVO %>
+
+<% 
+## Generate citation details
+citation_details = ""
+statement_data = statement["allData"]
+if statement_data.has_key?("subclass")
+	subclass = statement_data["subclass"]
+            if subclass.include?("Article")
+                if statement_data.has_key?("journal")
+                    citation_details = "<em>" + statement_data["journal"] + "</em>.&nbsp;"
+                    if(statement_data.has_key?("volume") and statement_data.has_key?("startPage") and statement_data.has_key?("endPage"))
+                        citation_details += statement_data["volume"] + ":"+ statement_data["startPage"] + "-" + statement_data["endPage"] + "."
+
+                    elsif statement_data.has_key?("volume") and statement_data.has_key?("startPage")
+                        citation_details += statement_data["volume"] + ":" + statement_data["startPage"] + "."
+                    elsif statement_data.has_key?("volume")
+                        citation_details += statement_data["volume"] + "."
+                    elsif statement_data.has_key?("startPage") and statement_data.has_key?("endPage")
+                        citation_details += statement_data["startPage"] + "-" + statement_data["endPage"] + "."       
+                    elsif statement_data.has_key?("startPage")
+                        citation_details += statement_data["startPage"] + "."
+                    end
+                end
+            elsif subclass.include?("Chapter")
+                if statement_data.has_key?("journal")
+                    citation_details += "<em>" + statement_data["journal"] + "</em>."
+                elsif statement_data.has_key?("appearsIn")
+                    citation_details += "<em>" + statement_data["appearsIn"] + "</em>."
+                elsif statement_data.has_key?("partOf")
+                    citation_details += "<em>" + statement_data["partOf"] + "</em>."
+                end
+                if statement_data.has_key?("editor")
+                    citation_details +="ed. &nbsp;" + statement_data["editor"] + ".&nbsp;"
+                    
+                end
+                if statement_data.has_key?("locale") and statement_data.has_key?("publisher")
+                    citation_details += statement_data["locale"] + ":&nbsp;" + statement_data["publisher"] + "."
+                elsif statement_data.has_key?("locale")
+                    citation_details += statement_data["locale"] + "."
+                elsif statement_data.has_key?("publisher")
+                    citation_details += statement_data["publisher"] + "."
+                end
+                if statement_data.has_key?("startPage") and statement_data.has_key?("endPage")
+                    citation_details += statement_data["startPage"] + "-" + statement_data["endPage"] + "."
+                elsif statement_data.has_key?("startPage")
+                    citation_details += statement_data["startPage"]
+                end
+            elsif subclass.include?("Book")
+                if statement_data.has_key?("volume") and (statement_data["volume"].length > 0 )
+                    citation_details += "vol. &nbsp;" + statement_data["volume"] + ".&nbsp;" 
+                end
+                if statement_data.has_key?("editor")
+                    citation_details += "editor &nbsp;" + statement_data["editor"] + ".&nbsp;"
+                end
+                if statement_data.has_key?("locale") and statement_data.has_key?("publisher")
+                    citation_details += statement_data["locale"] + ":&nbsp;" + statement_data["publisher"] + "."
+                    
+                elsif statement_data.has_key?("locale")
+                    citation_details += statement_data["locale"] + "."
+                elsif statement_data.has_key?("publisher")
+                    citation_details += statement_data["publisher"] + "."
+                end
+            else
+                if statement_data.has_key?("journal")
+                    citation_details += "<em>" + statement_data["journal"] +  "</em>."
+                    
+                elsif statement_data.has_key?("appearsIn")
+                    citation_details += "<em>" + statement_data["appearsIn"] + "</em>."
+                elsif statement_data.has_key?("partOf")
+                    citation_details += "<em>" + statement_data["partOf"] + "</em>."
+                end
+                if statement_data.has_key?("editor")
+                    citation_details += "editor " + statement_data["editor"] + "&nbsp;"
+                    
+                end
+                if statement_data.has_key?("startPage") and statement_data.has_key?("endPage")
+                    citation_details += statement_data["startPage"]+ "-" + statement_data["endPage"] + "."
+                elsif statement_data.has_key?("startPage")
+                    citation_details += statement_data["startPage"]+ "."
+                end
+            end
+        end
+        
+        if statement_data.has_key?("infoResource")
+        	info_resource_link = "n1res?DocId=" + CGI::escape("vitroIndividual:" + statement_data["infoResource"])
+            if(citation_details != "")
+            	formatted_citation_date = ""
+            	citation_date = statement_data["dateTime"]
+            	if(citation_date != nil)
+            		d = DateTime.parse(citation_date)
+            		formatted_citation_date = d.strftime("%Y")
+            	end
+            	citation_details += " &nbsp;" + formatted_citation_date
+            %>
+                <a href="<%= info_resource_link%>"  title="name"><%= statement_data["infoResourceName"]%></a>.&nbsp;
+            
+            	<%= citation_details.html_safe %>
+            	
+            <%
+            else
+            %>
+                <a href="<%= info_resource_link%>"  title="name"><%= statement_data["infoResourceName"]%></a>
+            <%
+            end
+        else
+            # This shouldn't happen, but we must provide for it
+            authorship_link =  "n1auth?DocId=" + CGI::escape("vitroIndividual:" + statement_data["authorship"])
+            %>
+            <a href="<%= authorship_link%>" title="missing resource information">missing resource information</a>
+       		<%
+        end
+    
+
+
+ 
+
+%>

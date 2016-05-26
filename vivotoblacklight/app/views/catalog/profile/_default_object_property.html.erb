@@ -1,0 +1,47 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # default object property rendering -%>
+<%
+#display_statement_values = ""
+statement_data = statement["allData"]
+#      statement_data.each do|statement_data_key, statement_data_value|
+		#display_statement_values = display_statement_values + statement_data_value
+ #       display_statement_values = display_statement_values + statement_data_key + " = " + statement_data_value.to_s + "<br/>"
+
+ #     end
+      
+      
+## The above is good for debugging
+## But the actual default should be to print out a link to the object
+
+%>
+
+<%
+if(statement_data.has_key?("object"))
+	display_name = statement_data["object"]
+	local_name = "n1"
+	if(statement_data.has_key?("localName"))
+		local_name = statement_data["localName"]
+	end
+	if(statement_data.has_key?("label"))
+		display_name = statement_data["label"]
+	elsif(statement_data.has_key?("localName"))
+		display_name = local_name
+	end
+%>
+<a href="<%= local_name + "?DocId=" + CGI::escape("vitroIndividual:" + statement_data["object"])%>"><%= display_name%></a>
+<%
+## This will print out whatever information there is if there is no partial specified to deal with the property and no object variable exists
+## We should no longer need this when we have a partial to cover all properties
+else
+	statement_data.each do|statement_data_key, statement_data_value|
+		display_statement_values = statement_data_key + " = " + statement_data_value.to_s + "<br/>"
+		%>
+       <%= display_statement_values.html_safe %>
+       <%
+	end
+      
+end
+%>

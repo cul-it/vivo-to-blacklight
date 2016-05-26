@@ -1,0 +1,15 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+
+#preferred title property
+statement_data = statement['allData'] 
+ 
+#if( statement_data.has_key?("number"))
+if( statement_data.has_key?("preferredTitle"))
+        %><%= statement_data["preferredTitle"] %><%
+end    
+%>
+

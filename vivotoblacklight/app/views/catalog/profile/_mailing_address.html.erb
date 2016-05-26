@@ -1,0 +1,73 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "mailing address"
+statement_data = statement['allData'] 
+   
+if( statement_data.has_key?("street") && statement_data["street"] != nil)
+  street = statement_data["street"]
+    if( street.include?(";") )
+      street_lines = street.split("; ")
+      street_lines.each do|line|
+        %>
+        <p class="address-line">
+          <%= line %>
+        </p>
+        <%
+      end
+    else
+      %>
+        <p class="address-line">
+            <%= street %>
+        </p>
+     <%
+    end
+end    
+
+if( ( statement_data.has_key?("country") && statement_data["country"] != nil && (statement_data["country"] == "US" || statement_data["country"].include?("United States") || statement_data["country"].include?("U.S.") || statement_data["country"].include?("U.S.A.") || statement_data["country"].include?("USA"))))
+  
+  city_state_array = [(statement_data["locality"] || ""), (statement_data["region"] || "")]
+    city_state = join_strings_reject_empty(city_state_array, ", " )
+    city_state_zip_array = [ (city_state || ""), (statement_data["postalCode"] || "")]
+    city_state_zip = join_strings_reject_empty(city_state_zip_array, "&nbsp;".html_safe)
+
+    if( !city_state_zip.empty?) 
+      %>
+        <p class="address-line"><%= city_state_zip %></p>
+        <p class="address-line" style="float:left; padding-right:20px"><%= (statement_data["country"] || "") %></p>
+      <%
+    end
+else       
+    if( statement_data.has_key?("locality") && statement_data["locality"] != nil) 
+      %>
+        <p class="address-line">
+            <%= statement_data["locality"] %>
+        </p>
+      <%        
+    end    
+    if( statement_data.has_key?("region") && statement_data["region"] != nil)
+    %>
+        <p class="address-line">
+            <%= statement_data["region"] %>
+        </p>
+    <%
+    end    
+    if( statement_data.has_key?("postalCode") && statement_data["postalCode"] != nil)
+    %>
+        <p class="address-line">   
+            <%= statement_data["postalCode"] %>
+        </p>
+    <%
+    end    
+    if( statement_data.has_key?("country") && statement_data["country"] != nil)
+    %>
+        <p class="address-line" style="float:left; padding-right:20px">
+            <%= statement_data["country"] %>
+        </p>
+    <%
+    end
+end
+          
+%>

@@ -1,0 +1,41 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+#partial for publication venue for object property
+statement_data = statement['allData'] 
+citation_details = ""
+resource_title = ""  
+if( statement_data.has_key?("subclass"))
+    if( statement_data["subclass"].include?("Article"))
+            if( statement_data.has_key?("volume") && statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+                citation_details += (statement_data["volume"] || "")  + ":" +  (statement_data["startPage"] || "")  + "-" +  (statement_data["endPage"] || "")  + "."
+            elsif( statement_data.has_key?("volume") && statement_data.has_key?("startPage"))
+              citation_details += (statement_data["volume"] || "")  + ":" +  (statement_data["startPage"] || "")  + "."
+            elsif( statement_data.has_key?("volume"))
+              citation_details += (statement_data["volume"] || "")  + "."
+            elsif( statement_data.has_key?("startPage") && statement_data.has_key?("endPage"))
+              citation_details += (statement_data["startPage"] || "")  + "-" +  (statement_data["endPage"] || "")  + "."
+            elsif( statement_data.has_key?("startPage"))
+              citation_details += (statement_data["startPage"] || "")  + "."
+            end
+	end
+end
+
+
+  
+if( statement_data.has_key?("infoResource"))
+  resource_title = "<a href=\"" +  get_profile_url(statement_data["infoResource"])  + "\"  title=\"resource name\">" + statement_data["infoResourceName"] + "</a>"
+    if( citation_details != "")
+        resource_title += ".&nbsp;"
+    end
+else
+     # This shouldn't happen, but we must provide for it  
+    resource_title = "<a href=\"" +  get_profile_url(statement_data["editorship"]) + "\" title=\"missing info resource\">missing info resource</a>"
+end
+%>
+
+<%= resource_title.html_safe %> <%= citation_details.html_safe %> <%= yearSpan( (statement_data["dateTime"] || "")).html_safe %>
+
+

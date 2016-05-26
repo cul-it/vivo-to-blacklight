@@ -1,0 +1,28 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% statement_data = statement['allData'] %> 
+
+
+<% 
+  linked_individual = ""
+  position_title = ""
+  organization_string = ""
+    
+  linked_individual = "<a href=\"" +  get_profile_url(statement_data["person"]) + "\" title=\"person name\">" + (statement_data["personName"] || "") + "</a>"
+    
+    if( statement_data.has_key?("title") && statement_data["title"] != nil )
+        position_title = statement_data["title"]
+    elsif( statement_data.has_key?("posnLabel") && statement_data["posnLabel"] != nil)
+      linked_individual = statement_data["posnLabel"]
+    end
+    if( statement_data.has_key?("org"))
+      organization_string = "<a href=\"" +  get_profile_url(statement_data["org"]) + "\" title=\"organization name\">" + (statement_data["orgLabel"]||"") + "</a>"
+    end
+
+    display_html = linked_individual + (position_title != "" ? "," + position_title : "") + (organization_string != ""? "," + organization_string : "")
+     
+ %>
+ 
+ <%= display_html.html_safe%>

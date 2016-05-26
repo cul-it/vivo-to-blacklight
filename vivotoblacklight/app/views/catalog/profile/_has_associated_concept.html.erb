@@ -1,0 +1,23 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% #Used for subject areas and research areas
+statement_data = statement["allData"]
+vocabulary_source_name = nil
+concept_uri = statement_data["concept"]
+concept_link = "n1res?DocId=" + CGI::escape("vitroIndividual:" + concept_uri)
+concept_name = statement_data.has_key?("conceptLabel")? statement_data["conceptLabel"]: (statement_data.has_key?("conceptName")? statement_data["conceptName"]: "")
+  
+if statement_data.has_key?("vocabularySourceName")
+  vocabulary_source_name = statement_data["vocabulary_source_name"]
+end
+if (vocabulary_source_name != nil)
+ %>
+         <a href="<%=concept_link%>" title="concept"><%=concept_name%></a> (<%=vocabulary_source_name%>)
+<% else %>
+         <a href="<%=concept_link%>" title="concept"><%=concept_name%></a> 
+
+<%
+end
+%>

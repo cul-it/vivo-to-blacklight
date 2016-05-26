@@ -1,0 +1,34 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% 
+# Custom object property statement_data view for faux property "people". 
+
+statement_data = statement['allData']
+
+if( statement_data.has_key?("hideThis") && statement_data["hideThis"] != nil)
+%>
+<span class="hideThis">&nbsp;</span>
+  <script type="text/javascript" >
+      $('span.hideThis').parent().parent().addClass("hideThis");
+      if ( $('h3#relatedBy-Position').attr('class').length == 0 ) {
+          $('h3#relatedBy-Position').addClass('hiddenPeople');
+      }
+      $('span.hideThis').parent().remove();
+  </script>
+<%
+else
+  linked_individual = ""    
+  if( statement_data.has_key?("person"))
+      linked_individual = "<a href=\"" + get_profile_url(statement_data["person"]) + "\" title=\"person name\">" + statement_data["personName"] + "</a>"
+  else
+      
+      linked_individual = "<a href=\"" +  get_profile_url(statement_data["position"]) + "\" title=\"missing person in position\">missing person in position</a>"
+  end
+  display_array = [linked_individual, (statement_data["positionTitle"] || "")]
+  display_html = join_strings_reject_empty(display_array).html_safe
+  %><%= display_html%> <%= yearIntervalSpan( (statement_data["dateTimeStart"] || ""), (statement_data["dateTimeEnd"] || "")).html_safe %><%  
+end 
+
+%>

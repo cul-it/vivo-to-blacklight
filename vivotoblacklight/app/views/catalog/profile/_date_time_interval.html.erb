@@ -1,0 +1,53 @@
+<%
+# @author Darcy Branchini, Huda Khan
+# @company Mann Library, Cornell University
+%>
+<% # http://vivoweb.org/ontology/core#dateTimeInterval %>
+<%
+statement_data = statement["allData"]
+  formatted_date = ""
+if (!statement_data["valueStart"].present? and !statement_data["valueEnd"].present? and !statement_data["label"].present?)
+    	
+    		
+    		%>
+    		Incomplete date time interval (Error)
+        	
+    		<%
+    	
+else
+	if(statement_data["label"].present?)
+		%><%=statement_data["label"]%><%
+	else
+		
+			startDate = ""
+			startPrecision = ""
+			endDate = ""
+			endPrecision = ""
+		
+		if(statement_data["dateTimeStart"].present?)
+			startDate = statement_data["dateTimeStart"]
+		end
+		if(statement_data["precisionStart"].present?)
+			startPrecision = statement_data["precisionStart"]
+		end
+		if(statement_data["dateTimeEnd"].present?)
+			endDate = statement_data["dateTimeEnd"]
+		end
+		if(statement_data["precisionEnd"].present?)
+			endPrecision = statement_data["precisionEnd"]
+		end
+		
+    #${dt.dateTimeIntervalLong("${statement.dateTimeStart!}", "${statement.precisionStart!}", "${statement.dateTimeEnd!}", "${statement.precisionEnd!}")}
+    #dateTimeIntervalLong (dateTimeStart="", precisionStart="", dateTimeEnd="", precisionEnd="", endAsRange=true)
+		formatted_date = dateTimeIntervalLong(startDate, startPrecision, endDate, endPrecision)
+
+			%><%=formatted_date%><%
+		end
+      
+    
+end
+    
+%>
+
+
+
