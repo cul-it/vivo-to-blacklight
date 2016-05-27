@@ -162,7 +162,7 @@ class VivoProfile
     return property_info_array
   end
 
-  ##Methods used for Document content type
+  ##Methods that can be used to get property information for authors, publishers, or publications
 
   #Authors
   def getAuthors()
@@ -178,18 +178,6 @@ class VivoProfile
     return property_info
   end
 
-  #Published In
-  def getPublishedIn()
-  end
-
-  #Restriction
-  def getRestrictions()
-  end
-
-  #Sector
-  def getSectors()
-  end
-
   def getPublications()
     property_key = "http://vivoweb.org/ontology/core#relatedBy-http://xmlns.com/foaf/0.1/Person-http://vivoweb.org/ontology/core#Authorship"
     property_info = getPropertyInfo(property_key)
@@ -199,12 +187,6 @@ class VivoProfile
 
   #Data content type
 
-  #service provided by
-  def getServiceProvidedBy()
-    property_key = get_service_provided_by_key()
-    property_info = getPropertyInfo(property_key)
-    return property_info
-  end
   
   #Convenience methods - get keys for particular properties
   
@@ -215,11 +197,6 @@ class VivoProfile
   def get_editors_key()
     return "http://vivoweb.org/ontology/core#relatedBy-http://purl.obolibrary.org/obo/IAO_0000030-http://vivoweb.org/ontology/core#Editorship"
   end
-  
-  def get_service_provided_by_key()
-    return "http://purl.obolibrary.org/obo/ERO_0000390"
-  end
-
   
   ##We may want additional parameters to decide which partial to employ, right now just based off template name coming
   ##back from VIVO
