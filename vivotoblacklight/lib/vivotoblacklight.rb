@@ -1,5 +1,8 @@
 require "vivotoblacklight/engine"
+require "vivotoblacklight/repository"
+require "vivotoblacklight/solr_helper"
+#require "vivotoblacklight/search_helper"
 
 module Vivotoblacklight
-  VIVONamespace = "http://www.nyclimatescience.org/"
+  
 end

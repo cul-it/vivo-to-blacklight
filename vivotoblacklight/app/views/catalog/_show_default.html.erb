@@ -1,0 +1,73 @@
+<%# Extension of the default Blacklight show to demonstrate how to integrate the vivo profile information -%>
+<%# default partial to display solr document fields in catalog show view -%>
+<dl class="dl-horizontal  dl-invert">
+  <% document_show_fields(document).each do |field_name, field| -%>
+    <% if should_render_show_field? document, field %>
+	    <dt class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_label document, field: field_name %></dt>
+	    <dd class="blacklight-<%= field_name.parameterize %>"><%= render_document_show_field_value document, field: field_name %></dd>
+    <% end -%>
+  <% end -%>
+</dl>
+
+  
+  <%
+vivo_profile =  Vivotoblacklight::VivoProfile.new(document)
+intro_property_keys = [ 
+  vivo_profile.get_authors_key(),
+  vivo_profile.get_editors_key(),
+  "http://vivoweb.org/ontology/core#publisher",
+  "http://vivoweb.org/ontology/core#hasPublicationVenue", #published in
+  "http://purl.obolibrary.org/obo/ERO_0000045", #restriction
+  "http://purl.org/ontology/bibo/doi", #DOI
+  "http://vivoweb.org/ontology/core#reportId", #Report Id
+  "http://purl.org/ontology/bibo/volume", #volume
+  "http://purl.org/ontology/bibo/issue", #issue
+  "http://vivoweb.org/ontology/core#freetextKeyword", #keywords
+  "http://vivoweb.org/ontology/core#hasSubjectArea", #subject areas
+  "http://vivoweb.org/ontology/core#description"
+]
+
+#Get property info objects for the remaining items we wish to display
+ #These are the property identifiers for properties that are displayed elsewhere on the page or those we wish to exclude
+exclude_keys = get_default_exclude_property_keys() + intro_property_keys 
+intro_properties_array = vivo_profile.get_property_info_objects_for_key_list(intro_property_keys)
+remaining_display_array = vivo_profile.get_property_info_objects_except_keys(exclude_keys)
+  
+  %>
+  
+  <%# Intro properties: the properties from the VIVO profile you wish to display first -%>
+  
+<%
+intro_properties_array.each do|intro_property_info_object|
+  #Get view options - i.e. what is the layout for the property
+  if(intro_property_info_object != nil)
+    property_view_options = get_property_view_options(intro_property_info_object)
+    property_view_name = property_view_options["view"]
+%>
+
+<%= render :partial => property_view_name, :locals=>local_assigns.merge(property_view_options) %>
+
+<%
+  end
+end
+%>  
+
+<%# All other remaining properties, excluding any specific properties you do not wish to display e.g. those that have already been displayed -%>
+
+
+  <!-- all other properties -->
+    <%
+    remaining_display_array.each do|display_property_info_object|
+      #Get view options - i.e. what is the layout for the property
+      if(display_property_info_object != nil)
+      property_view_options = get_property_view_options(display_property_info_object)
+      property_view_name = property_view_options["view"]
+    %>
+    
+    <%= render :partial => property_view_name, :locals=>local_assigns.merge(property_view_options) %>    
+    
+    <%
+      end
+    end
+    %>  
+     

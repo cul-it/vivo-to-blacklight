@@ -77,7 +77,7 @@ class VivoProfile
   def initialize(document)
     #Get the URI
     thisURI = document["URI"] unless document["URI"].blank?
-
+    Rails.logger.debug("initialize")
     if thisURI.present?
       #Get the profile back
       result = get_individual_profile_json(thisURI)
@@ -114,6 +114,7 @@ class VivoProfile
   ##Retrieve the VIVO Profile - the complete JSON output
   def get_individual_profile_json thisURI
     vivo_app = ENV["VIVO_APP_URL"]
+   Rails.logger.debug("VIVO APP is #{vivo_app.inspect}")
     result= {}
     thisURI = CGI::escape(thisURI)
     url = URI.parse(vivo_app + "/individual?uri=" + thisURI  + "&action=defaultJSON")
