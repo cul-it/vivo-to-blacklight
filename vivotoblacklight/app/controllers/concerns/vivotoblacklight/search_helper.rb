@@ -5,7 +5,8 @@ module Vivotoblacklight::SearchHelper
   extend ActiveSupport::Concern
 
   include Blacklight::SearchHelper
-  
+
+  puts "VBL:SearchHelper in concerns"
   #OVerriding repository here
   def repository_class
     #Rails.logger.debug("Defining repository class from config ? #{blacklight_config.repository_class.inspect}")

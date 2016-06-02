@@ -4,6 +4,7 @@ require 'cgi'
 module Vivotoblacklight
   class Repository < Blacklight::Solr::Repository
   ##
+    puts "VBL:Repository"
      # Find a single solr document result (by id) using the document configuration
      # @param [String] document's unique key value
      # @param [Hash] additional solr query parameters
