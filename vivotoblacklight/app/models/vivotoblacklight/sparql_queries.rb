@@ -24,7 +24,7 @@ class SparqlQueries
     puts Rails.application.config.VIVONamespace
     options = {:method => :get}
     #Sparql API should be specified in app_constants
-    @sparql = SPARQL::Client.new(ENV["VIVO_SPARQLAPI"]  , options)
+    @sparql = SPARQL::Client.new(Vivotoblacklight.configuration.vivo_sparql_api  , options)
     if(@sparql == nil)
       Rails.logger.error("ERROR: Sparql client is nil")
     end

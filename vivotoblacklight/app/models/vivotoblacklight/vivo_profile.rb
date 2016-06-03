@@ -113,7 +113,9 @@ class VivoProfile
 
   ##Retrieve the VIVO Profile - the complete JSON output
   def get_individual_profile_json thisURI
-    vivo_app = ENV["VIVO_APP_URL"]
+    #vivo_app = ENV["VIVO_APP_URL"]
+    vivo_app = Vivotoblacklight.configuration.vivo_app_url
+    #Throw an exception if the app url has not been set
    Rails.logger.debug("VIVO APP is #{vivo_app.inspect}")
     result= {}
     thisURI = CGI::escape(thisURI)

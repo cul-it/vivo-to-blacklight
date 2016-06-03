@@ -5,5 +5,5 @@ Rails.application.routes.draw do
  
    #allow any characters for id (since SOLR IDs are URIs)
    #this already exists - how to add constraints to preexisting route
-   #blacklight_for:catalog, :constraints => {:id => /|.*/}
+   blacklight_for:catalog, :constraints => {:id => /|.*/}
 end
